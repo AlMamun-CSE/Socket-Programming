@@ -45,13 +45,15 @@ public class Server{
                     String msg = br.readLine();
                     if(msg.equals("exit")){
                         System.out.println("Client terminated the chat");
+                        client.close();
                         break;
                     }
                     
                     System.out.println("Client: "+msg);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Connections loss");
             }
 
            
@@ -66,16 +68,21 @@ public class Server{
         //ai thread tih user theke data nibe and send korbe client porjontoh
         Runnable r2 =()->{
             try {
-                while(true){
+                while(!client.isClosed()){
                     System.out.println("writer started.");
                     BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
                     String content = br1.readLine();
                     out.println(content);
                     out.flush();
+                    if(content.equals("exit")){
+                        client.close();
+                        break;
+                    }
 
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Connection close");
             }
         };
 
